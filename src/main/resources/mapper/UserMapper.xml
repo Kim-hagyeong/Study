@@ -1,0 +1,10 @@
+<mapper namespace="com.koreait.study.mapper.UserMapper">
+    <select id="findByUserId" parameterType="string" resultType="com.koreait.study.model.User">
+        SELECT id, user_id AS userId, password, name
+        FROM users WHERE user_id = #{userId}
+    </select>
+    <insert id="insert" parameterType="com.koreait.study.model.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users(user_id, password, name)
+        VALUES(#{userId}, #{password}, #{name})
+    </insert>
+</mapper>

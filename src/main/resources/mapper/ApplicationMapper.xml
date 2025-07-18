@@ -1,0 +1,21 @@
+<mapper namespace="com.koreait.study.mapper.ApplicationMapper">
+    <select id="exists" resultType="int">
+        SELECT COUNT(*) FROM applications
+        WHERE user_id=#{userId} AND study_id=#{studyId}
+    </select>
+
+    <insert id="insert" parameterType="map">
+        INSERT INTO applications(study_id, user_id)
+        VALUES(#{studyId}, #{userId})
+    </insert>
+
+    <select id="findByUserId" resultType="com.koreait.study.model.Study">
+        SELECT s.id, s.title, s.description,
+        s.max_members AS maxMembers,
+        s.deadline, s.author,
+        (SELECT COUNT(*) FROM applications a WHERE a.study_id=s.id) AS currentMembers
+        FROM studies s
+        JOIN applications a ON s.id=a.study_id
+        WHERE a.user_id=#{userId}
+    </select>
+</mapper>

@@ -1,0 +1,26 @@
+<mapper namespace="com.koreait.study.mapper.StudyMapper">
+    <select id="findAll" resultType="com.koreait.study.model.Study">
+        SELECT s.id, s.title, s.description,
+        s.max_members AS maxMembers,
+        s.deadline, s.author,
+        (SELECT COUNT(*) FROM applications a WHERE a.study_id=s.id) AS currentMembers
+        FROM studies s
+        WHERE s.title LIKE CONCAT('%',#{search},'%')
+        OR s.author LIKE CONCAT('%',#{search},'%')
+        ORDER BY s.created_at DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id="findById" resultType="com.koreait.study.model.Study">
+        SELECT id, title, description,
+        max_members AS maxMembers,
+        deadline, author,
+        (SELECT COUNT(*) FROM applications a WHERE a.study_id=#{id}) AS currentMembers
+        FROM studies WHERE id=#{id}
+    </select>
+
+    <insert id="insert" parameterType="com.koreait.study.model.Study" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO studies(title, description, max_members, deadline, author)
+        VALUES(#{title}, #{description}, #{maxMembers}, #{deadline}, #{author})
+    </insert>
+</mapper>
